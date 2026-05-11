@@ -204,17 +204,17 @@ textarea { resize: vertical; min-height: 58px; line-height: 1.6; }
 <body>
 
 <header>
-  <div class="logo" onclick="goHome()">Inner<span>Circle (Reworked)</span></div>
+  <div class="logo" onclick="goHome()">Inner<span>Circle</span></div>
   <div class="breadcrumb" id="breadcrumb"></div>
   <div class="header-right">
-    <div class="hdr-tag" id="hdr-tag">Prompt List</div>
+    <div class="hdr-tag" id="hdr-tag">Avaiable Prompts</div>
   </div>
 </header>
 
 <!-- HOME -->
 <div id="view-home">
   <div class="home-hero">
-    <h1>Prompt<br/><em>List</em></h1>
+    <h1>Prompt<br/><em>Studio</em></h1>
     <p>Selecione um gerador de prompts abaixo. Cada um tem seus próprios campos e gera um prompt otimizado para a ferramenta certa.</p>
   </div>
   <div class="home-grid" id="home-grid"></div>
@@ -282,7 +282,7 @@ function goHome() {
   document.getElementById('view-home').style.display = 'flex';
   document.getElementById('view-prompt').classList.remove('active');
   document.getElementById('breadcrumb').innerHTML = '';
-  document.getElementById('hdr-tag').textContent = 'Prompt List';
+  document.getElementById('hdr-tag').textContent = 'Prompt Studio';
   currentPrompt = null;
 }
 
@@ -548,6 +548,15 @@ function buildConcept(tpl, p) {
 }
 
 function buildRelight(tpl) {
+  const mode = activeTag('relight_mode');
+  let modeBlock = '';
+  if (mode === 'reconstruct') {
+    modeBlock = `LIGHTING MODE: FULL RECONSTRUCTION\nCompletely ignore and remove the existing lighting of the image. Discard all current shadows, highlights, bounces, and color temperature. Build the entire lighting from scratch using only the parameters defined below. The original light sources in the image should have no influence on the result.`;
+  } else {
+    modeBlock = `LIGHTING MODE: ADDITIVE\nPreserve the existing lighting of the image as the base. Add the new light source defined below on top of the current illumination, blending naturally with the existing shadows and highlights.`;
+  }
+  tpl = tpl.split('{{relight_mode_block}}').join(modeBlock);
+
   const scope = activeTag('scope');
   let scopeBlock = '';
   if (scope === 'subject_only') {
