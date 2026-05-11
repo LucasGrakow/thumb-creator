@@ -241,7 +241,7 @@
         },
         {
           "id": "light_direction",
-          "section": "Nova Luz",
+          "section": "Direção da Iluminação",
           "sectionNumber": "02",
           "type": "tags",
           "label": null,
@@ -259,8 +259,8 @@
         },
         {
           "id": "light_type",
-          "section": "Nova Luz",
-          "sectionNumber": "02",
+          "section": "Tipo de Iluminação",
+          "sectionNumber": "03",
           "type": "tags",
           "label": null,
           "options": [
@@ -275,8 +275,8 @@
         },
         {
           "id": "intensity",
-          "section": "Nova Luz",
-          "sectionNumber": "02",
+          "section": "Força",
+          "sectionNumber": "04",
           "type": "tags",
           "label": null,
           "options": [
@@ -290,7 +290,7 @@
         {
           "id": "key_color",
           "section": "Temperatura da Luz",
-          "sectionNumber": "03",
+          "sectionNumber": "05",
           "type": "tags",
           "label": "Tom da key light",
           "options": [
@@ -306,7 +306,7 @@
         {
           "id": "rim_color",
           "section": "Temperatura da Luz",
-          "sectionNumber": "03",
+          "sectionNumber": "06",
           "type": "tags",
           "label": "Rim light",
           "options": [
@@ -321,7 +321,7 @@
         {
           "id": "scope",
           "section": "Escopo",
-          "sectionNumber": "04",
+          "sectionNumber": "07",
           "type": "tags",
           "label": "O relight afeta",
           "options": [
