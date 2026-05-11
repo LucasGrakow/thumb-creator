@@ -3,137 +3,148 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>Thumbnail Prompt Generator</title>
+<title>Thumbforge</title>
 <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet"/>
 <style>
 :root {
-  --bg: #0a0a0b;
-  --bg2: #111113;
-  --bg3: #18181c;
-  --border: #222228;
+  --bg:      #0a0a0b;
+  --bg2:     #111113;
+  --bg3:     #18181c;
+  --border:  #222228;
   --border2: #2e2e38;
-  --accent: #e8ff47;
+  --accent:  #e8ff47;
   --accent2: #ff6b35;
-  --text: #f0f0f0;
-  --muted: #6b6b7a;
-  --muted2: #4a4a58;
+  --text:    #f0f0f0;
+  --muted:   #6b6b7a;
+  --muted2:  #4a4a58;
   --success: #47ffb2;
-  --radius: 10px;
+  --radius:  10px;
   --radius2: 6px;
 }
-
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { height: 100%; overflow: hidden; }
+body { background: var(--bg); color: var(--text); font-family: 'Syne', sans-serif; height: 100vh; display: flex; flex-direction: column; }
 
-body {
-  background: var(--bg);
-  color: var(--text);
-  font-family: 'Syne', sans-serif;
-  min-height: 100vh;
-  display: grid;
-  grid-template-columns: 380px 1fr;
-  grid-template-rows: 60px 1fr;
-}
-
-/* HEADER */
+/* ── HEADER ── */
 header {
-  grid-column: 1 / -1;
+  flex-shrink: 0;
+  height: 56px;
   display: flex;
   align-items: center;
-  padding: 0 2rem;
+  padding: 0 1.5rem;
   border-bottom: 1px solid var(--border);
   background: var(--bg);
   gap: 1rem;
-  position: sticky;
-  top: 0;
   z-index: 100;
 }
-.logo {
-  font-size: 13px;
-  font-weight: 700;
-  letter-spacing: .15em;
-  text-transform: uppercase;
-  color: var(--accent);
-}
+.logo { font-size: 14px; font-weight: 800; letter-spacing: .12em; text-transform: uppercase; color: var(--accent); cursor: pointer; }
 .logo span { color: var(--muted); font-weight: 400; }
-.header-tag {
-  font-family: 'DM Mono', monospace;
-  font-size: 10px;
-  color: var(--muted2);
-  border: 1px solid var(--border2);
-  padding: 2px 8px;
-  border-radius: 99px;
-  margin-left: auto;
+.breadcrumb { display: flex; align-items: center; gap: .5rem; font-size: 12px; color: var(--muted); }
+.breadcrumb .sep { color: var(--muted2); }
+.breadcrumb .current { color: var(--text); font-weight: 600; }
+.header-right { margin-left: auto; display: flex; align-items: center; gap: .75rem; }
+.hdr-tag { font-family: 'DM Mono', monospace; font-size: 10px; color: var(--muted2); border: 1px solid var(--border2); padding: 2px 8px; border-radius: 99px; }
+
+/* ── VIEWS ── */
+#view-home, #view-prompt { flex: 1; overflow: hidden; }
+
+/* ── HOME ── */
+#view-home {
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+  padding: 3rem 2rem 2rem;
+  background: var(--bg);
+}
+.home-hero { margin-bottom: 3rem; }
+.home-hero h1 { font-size: clamp(2rem, 5vw, 3.5rem); font-weight: 800; line-height: 1.05; letter-spacing: -.02em; }
+.home-hero h1 em { font-style: normal; color: var(--accent); }
+.home-hero p { margin-top: .75rem; font-size: 14px; color: var(--muted); max-width: 480px; line-height: 1.7; font-weight: 400; }
+.home-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 1rem; }
+.prompt-card {
+  background: var(--bg3);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1.5rem;
+  cursor: pointer;
+  transition: border-color .15s, transform .15s;
+  display: flex;
+  flex-direction: column;
+  gap: .75rem;
+  position: relative;
+  overflow: hidden;
+}
+.prompt-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, rgba(232,255,71,.04) 0%, transparent 60%);
+  opacity: 0;
+  transition: opacity .2s;
+}
+.prompt-card:hover { border-color: var(--border2); transform: translateY(-2px); }
+.prompt-card:hover::before { opacity: 1; }
+.card-icon { font-size: 2rem; line-height: 1; }
+.card-tag { font-family: 'DM Mono', monospace; font-size: 10px; color: var(--accent); background: rgba(232,255,71,.08); border: 1px solid rgba(232,255,71,.15); padding: 2px 8px; border-radius: 99px; align-self: flex-start; }
+.card-title { font-size: 18px; font-weight: 700; letter-spacing: -.01em; }
+.card-desc { font-size: 12px; color: var(--muted); line-height: 1.6; font-weight: 400; }
+.card-arrow { margin-top: auto; font-size: 11px; color: var(--muted2); display: flex; align-items: center; gap: .35rem; transition: color .15s; }
+.prompt-card:hover .card-arrow { color: var(--accent); }
+
+/* ── PROMPT VIEW ── */
+#view-prompt {
+  display: none;
+  flex: 1;
+  overflow: hidden;
+  display: none;
+}
+#view-prompt.active {
+  display: grid;
+  grid-template-columns: 360px 1fr;
 }
 
 /* SIDEBAR */
 aside {
-  grid-row: 2;
   border-right: 1px solid var(--border);
   overflow-y: auto;
-  padding: 1.5rem;
+  overflow-x: hidden;
+  height: 100%;
+  padding: 1.25rem;
+  padding-bottom: 5rem;
   display: flex;
   flex-direction: column;
-  gap: 1.25rem;
+  gap: 1rem;
   background: var(--bg);
+  position: relative;
 }
-
-aside::-webkit-scrollbar { width: 4px; }
-aside::-webkit-scrollbar-track { background: transparent; }
+aside::-webkit-scrollbar { width: 3px; }
 aside::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 99px; }
 
 /* MAIN */
 main {
-  grid-row: 2;
   overflow-y: auto;
-  padding: 1.5rem;
+  overflow-x: hidden;
+  height: 100%;
+  padding: 1.25rem;
   display: flex;
   flex-direction: column;
-  gap: 1rem;
+  gap: .75rem;
   background: var(--bg2);
 }
+main::-webkit-scrollbar { width: 3px; }
+main::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 99px; }
 
-/* SECTIONS */
-.section {
-  background: var(--bg3);
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  overflow: hidden;
-}
-.section-header {
-  padding: .65rem 1rem;
-  border-bottom: 1px solid var(--border);
-  display: flex;
-  align-items: center;
-  gap: .5rem;
-}
-.section-num {
-  font-family: 'DM Mono', monospace;
-  font-size: 10px;
-  color: var(--accent);
-  background: rgba(232,255,71,.08);
-  border: 1px solid rgba(232,255,71,.2);
-  border-radius: 4px;
-  padding: 1px 6px;
-}
-.section-title {
-  font-size: 11px;
-  font-weight: 700;
-  letter-spacing: .1em;
-  text-transform: uppercase;
-  color: var(--muted);
-}
-.section-body { padding: 1rem; display: flex; flex-direction: column; gap: .75rem; }
+/* SECTION */
+.section { background: var(--bg3); border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; }
+.section-header { padding: .6rem .9rem; border-bottom: 1px solid var(--border); display: flex; align-items: center; gap: .5rem; }
+.section-num { font-family: 'DM Mono', monospace; font-size: 10px; color: var(--accent); background: rgba(232,255,71,.08); border: 1px solid rgba(232,255,71,.2); border-radius: 4px; padding: 1px 6px; }
+.section-title { font-size: 11px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); }
+.section-body { padding: .9rem; display: flex; flex-direction: column; gap: .65rem; }
 
 /* FIELDS */
-.field { display: flex; flex-direction: column; gap: 5px; }
-.field-row { display: grid; grid-template-columns: 1fr 1fr; gap: .65rem; }
-label {
-  font-size: 11px;
-  font-weight: 600;
-  letter-spacing: .06em;
-  text-transform: uppercase;
-  color: var(--muted);
-}
+.field { display: flex; flex-direction: column; gap: 4px; }
+.field-row { display: grid; grid-template-columns: 1fr 1fr; gap: .6rem; }
+label { font-size: 11px; font-weight: 600; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); }
 input, select, textarea {
   background: var(--bg);
   border: 1px solid var(--border2);
@@ -141,483 +152,400 @@ input, select, textarea {
   color: var(--text);
   font-family: 'DM Mono', monospace;
   font-size: 12px;
-  padding: 8px 10px;
+  padding: 7px 10px;
   outline: none;
   transition: border .15s, box-shadow .15s;
   width: 100%;
 }
-input:focus, select:focus, textarea:focus {
-  border-color: var(--accent);
-  box-shadow: 0 0 0 3px rgba(232,255,71,.08);
-}
+input:focus, select:focus, textarea:focus { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(232,255,71,.07); }
 select { cursor: pointer; appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%236b6b7a'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 10px center; padding-right: 28px; }
-textarea { resize: vertical; min-height: 60px; line-height: 1.6; }
-input::placeholder, textarea::placeholder { color: var(--muted2); }
+textarea { resize: vertical; min-height: 58px; line-height: 1.6; }
 
 /* TAGS */
-.tags { display: flex; flex-wrap: wrap; gap: 6px; }
-.tag {
-  font-family: 'DM Mono', monospace;
-  font-size: 11px;
-  padding: 5px 12px;
-  border-radius: 99px;
-  border: 1px solid var(--border2);
-  color: var(--muted);
-  cursor: pointer;
-  transition: all .15s;
-  user-select: none;
-}
+.tags { display: flex; flex-wrap: wrap; gap: 5px; }
+.tag { font-family: 'DM Mono', monospace; font-size: 11px; padding: 4px 11px; border-radius: 99px; border: 1px solid var(--border2); color: var(--muted); cursor: pointer; transition: all .15s; user-select: none; }
 .tag:hover { border-color: var(--accent); color: var(--accent); }
-.tag.active {
-  background: rgba(232,255,71,.1);
-  border-color: var(--accent);
-  color: var(--accent);
-}
+.tag.active { background: rgba(232,255,71,.1); border-color: var(--accent); color: var(--accent); }
 
 /* CHAR BLOCK */
-.char-block {
-  border: 1px solid var(--border);
-  border-radius: var(--radius2);
-  overflow: hidden;
-}
-.char-block-header {
-  background: var(--bg);
-  padding: .5rem .75rem;
-  font-size: 10px;
-  font-weight: 700;
-  letter-spacing: .1em;
-  text-transform: uppercase;
-  color: var(--accent2);
-  border-bottom: 1px solid var(--border);
-  display: flex;
-  align-items: center;
-  gap: .5rem;
-}
-.char-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--accent2); }
-.char-block-body { padding: .75rem; display: flex; flex-direction: column; gap: .65rem; }
+.char-block { border: 1px solid var(--border); border-radius: var(--radius2); overflow: hidden; }
+.char-block-header { background: var(--bg); padding: .45rem .75rem; font-size: 10px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: var(--accent2); border-bottom: 1px solid var(--border); display: flex; align-items: center; gap: .4rem; }
+.char-dot { width: 5px; height: 5px; border-radius: 50%; background: var(--accent2); flex-shrink: 0; }
+.char-block-body { padding: .75rem; display: flex; flex-direction: column; gap: .6rem; }
 
-/* OUTPUT PANEL */
-.output-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-bottom: .75rem;
-}
-.output-title {
-  font-size: 11px;
-  font-weight: 700;
-  letter-spacing: .1em;
-  text-transform: uppercase;
-  color: var(--muted);
-}
-.btn-row { display: flex; gap: .5rem; }
-.btn {
-  font-family: 'Syne', sans-serif;
-  font-size: 11px;
-  font-weight: 700;
-  letter-spacing: .08em;
-  text-transform: uppercase;
-  padding: 7px 14px;
-  border-radius: var(--radius2);
-  border: 1px solid var(--border2);
-  background: transparent;
-  color: var(--muted);
-  cursor: pointer;
-  transition: all .15s;
-}
+.badge { display: inline-flex; align-items: center; font-family: 'DM Mono', monospace; font-size: 10px; padding: 2px 8px; border-radius: 99px; background: rgba(255,107,53,.1); border: 1px solid rgba(255,107,53,.25); color: var(--accent2); margin-left: auto; }
+
+/* OUTPUT */
+.output-header { display: flex; align-items: center; justify-content: space-between; flex-shrink: 0; }
+.output-title { font-size: 11px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); }
+.btn-row { display: flex; gap: .4rem; }
+.btn { font-family: 'Syne', sans-serif; font-size: 11px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; padding: 6px 12px; border-radius: var(--radius2); border: 1px solid var(--border2); background: transparent; color: var(--muted); cursor: pointer; transition: all .15s; }
 .btn:hover { border-color: var(--text); color: var(--text); }
-.btn-accent {
-  background: var(--accent);
-  color: #0a0a0b;
-  border-color: var(--accent);
-}
+.btn-accent { background: var(--accent); color: #0a0a0b; border-color: var(--accent); }
 .btn-accent:hover { background: #d4eb35; border-color: #d4eb35; color: #0a0a0b; }
-
-.output-box {
-  background: var(--bg3);
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  padding: 1.25rem;
-  font-family: 'DM Mono', monospace;
-  font-size: 12px;
-  line-height: 1.8;
-  color: var(--text);
-  white-space: pre-wrap;
-  word-break: break-word;
-  min-height: 200px;
-  flex: 1;
-}
-
-.output-box .kw { color: var(--accent); font-weight: 500; }
-.output-box .rule { color: var(--accent2); }
-.output-box .val { color: #b0d4ff; }
-
-.status-bar {
-  display: flex;
-  align-items: center;
-  gap: .5rem;
-  padding: .5rem .75rem;
-  background: var(--bg3);
-  border: 1px solid var(--border);
-  border-radius: var(--radius2);
-  font-family: 'DM Mono', monospace;
-  font-size: 11px;
-  color: var(--muted);
-}
-.status-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--success); animation: pulse 2s infinite; }
+.output-box { background: var(--bg3); border: 1px solid var(--border); border-radius: var(--radius); padding: 1.1rem; font-family: 'DM Mono', monospace; font-size: 12px; line-height: 1.8; color: var(--text); white-space: pre-wrap; word-break: break-word; flex: 1; min-height: 0; overflow-y: auto; }
+.output-box::-webkit-scrollbar { width: 3px; }
+.output-box::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 99px; }
+.status-bar { flex-shrink: 0; display: flex; align-items: center; gap: .5rem; padding: .45rem .75rem; background: var(--bg3); border: 1px solid var(--border); border-radius: var(--radius2); font-family: 'DM Mono', monospace; font-size: 11px; color: var(--muted); }
+.status-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--success); animation: pulse 2s infinite; flex-shrink: 0; }
 @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.3} }
-
-.copy-feedback {
-  font-size: 10px;
-  color: var(--success);
-  opacity: 0;
-  transition: opacity .3s;
-  font-family: 'DM Mono', monospace;
-}
+.copy-feedback { font-size: 10px; color: var(--success); opacity: 0; transition: opacity .3s; font-family: 'DM Mono', monospace; }
 .copy-feedback.show { opacity: 1; }
-
-/* DIVIDER */
-.divider {
-  height: 1px;
-  background: var(--border);
-  margin: .25rem 0;
-}
-
-/* CHAR COUNT BADGE */
-.badge {
-  display: inline-flex;
-  align-items: center;
-  font-family: 'DM Mono', monospace;
-  font-size: 10px;
-  padding: 2px 8px;
-  border-radius: 99px;
-  background: rgba(255,107,53,.1);
-  border: 1px solid rgba(255,107,53,.25);
-  color: var(--accent2);
-  margin-left: auto;
-}
 
 /* GENERATE BTN */
 .generate-btn {
-  width: 100%;
-  padding: 12px;
+  width: calc(360px - 2.5rem);
+  padding: 11px;
   background: var(--accent);
   color: #0a0a0b;
   border: none;
   border-radius: var(--radius);
   font-family: 'Syne', sans-serif;
-  font-size: 13px;
+  font-size: 12px;
   font-weight: 800;
   letter-spacing: .1em;
   text-transform: uppercase;
   cursor: pointer;
   transition: all .15s;
-  position: sticky;
-  bottom: 0;
-  margin-top: auto;
+  position: fixed;
+  bottom: 1rem;
+  left: 1.25rem;
+  z-index: 50;
 }
 .generate-btn:hover { background: #d4eb35; transform: translateY(-1px); }
 .generate-btn:active { transform: translateY(0); }
+
+/* HOME link in breadcrumb */
+.bc-home { cursor: pointer; transition: color .15s; }
+.bc-home:hover { color: var(--accent); }
 </style>
 </head>
 <body>
 
 <header>
-  <div class="logo">Thumb<span>forge</span></div>
-  <div class="header-tag">v1.0 · IRL Concept Generator</div>
+  <div class="logo" onclick="goHome()">Thumb<span>forge</span></div>
+  <div class="breadcrumb" id="breadcrumb"></div>
+  <div class="header-right">
+    <div class="hdr-tag" id="hdr-tag">Prompt Studio</div>
+  </div>
 </header>
 
-<aside>
-
-  <!-- STYLE -->
-  <div class="section">
-    <div class="section-header">
-      <span class="section-num">01</span>
-      <span class="section-title">Estilo Visual</span>
-    </div>
-    <div class="section-body">
-      <div class="tags" id="style-tags">
-        <span class="tag active" data-val="ultra-realistic, shot on Sony A7IV, 24mm lens, cinematic depth of field">Ultra realista</span>
-        <span class="tag" data-val="realistic, DSLR quality, natural lighting, editorial feel">Realista</span>
-        <span class="tag" data-val="over-edited, heavy color grading, high contrast, dramatic saturation, composited background">Over edited</span>
-      </div>
-      <div class="field">
-        <label>Pintura / Digital Art</label>
-        <div class="tags" id="art-tags">
-          <span class="tag active" data-val="high-end cinematic digital painting in stylized realism">Stylized Realism</span>
-          <span class="tag" data-val="high-end photorealistic CGI render">Photo CGI</span>
-          <span class="tag" data-val="cinematic concept art, painterly finish">Concept Art</span>
-        </div>
-      </div>
-    </div>
+<!-- HOME -->
+<div id="view-home">
+  <div class="home-hero">
+    <h1>Prompt<br/><em>Studio</em></h1>
+    <p>Selecione um gerador de prompts abaixo. Cada um tem seus próprios campos e gera um prompt otimizado para a ferramenta certa.</p>
   </div>
+  <div class="home-grid" id="home-grid"></div>
+</div>
 
-  <!-- PERSONAGENS -->
-  <div class="section">
-    <div class="section-header">
-      <span class="section-num">02</span>
-      <span class="section-title">Personagens</span>
-      <span class="badge" id="char-badge">1 pessoa</span>
-    </div>
-    <div class="section-body">
-      <div class="field">
-        <label>Nº de pessoas</label>
-        <select id="num-chars" onchange="updateChars()">
-          <option value="1">1 — só o Youtuber</option>
-          <option value="2">2 — Youtuber + secundário</option>
-          <option value="3">3 — Youtuber + 2 outros</option>
-        </select>
-      </div>
-      <div id="char-container"></div>
-    </div>
-  </div>
-
-  <!-- CÂMERA -->
-  <div class="section">
-    <div class="section-header">
-      <span class="section-num">03</span>
-      <span class="section-title">Câmera e Composição</span>
-    </div>
-    <div class="section-body">
-      <div class="field-row">
-        <div class="field">
-          <label>Ângulo</label>
-          <select id="cam-angle">
-            <option value="4 distinctly different camera angles across the 4 cells">Variado (4 diferentes)</option>
-            <option value="low-angle shot looking up">Low angle</option>
-            <option value="eye-level shot">Eye level</option>
-            <option value="high-angle shot looking down">High angle</option>
-            <option value="Dutch angle, slightly tilted">Dutch angle</option>
-            <option value="extreme close-up">Extreme close-up</option>
-            <option value="over-the-shoulder">Over the shoulder</option>
-          </select>
-        </div>
-        <div class="field">
-          <label>Enquadramento</label>
-          <select id="framing">
-            <option value="environmental portrait with subject taking up 40% of frame">Ambiental (40%)</option>
-            <option value="medium shot, from waist up">Meio corpo</option>
-            <option value="close-up shot, from chest up">Close (peito)</option>
-            <option value="full body shot">Corpo inteiro</option>
-          </select>
-        </div>
-      </div>
-      <div class="field-row">
-        <div class="field">
-          <label>Pose</label>
-          <select id="pose">
-            <option value="arms crossed, confident stance">Braços cruzados</option>
-            <option value="standing, arms slightly open, leaning forward">Inclinado à frente</option>
-            <option value="crouching low to the ground, intense">Agachado tenso</option>
-            <option value="running or mid-action toward camera">Correndo</option>
-            <option value="pointing at something off-frame">Apontando</option>
-            <option value="one hand raised dramatically">Mão levantada</option>
-            <option value="reacting with exaggerated expression, hands near face">Reação exagerada</option>
-          </select>
-        </div>
-        <div class="field">
-          <label>Expressão</label>
-          <select id="expression">
-            <option value="intense direct eye contact with camera, serious expression">Sério, olhar fixo</option>
-            <option value="wide shocked expression, eyes open, mouth agape">Chocado</option>
-            <option value="confident smirk, eyes locked on camera">Sorriso confiante</option>
-            <option value="angry or frustrated, eyebrows furrowed">Irritado</option>
-            <option value="laughing naturally, eyes toward camera">Rindo</option>
-            <option value="determined look, jaw set">Determinado</option>
-          </select>
-        </div>
+<!-- PROMPT VIEW -->
+<div id="view-prompt">
+  <aside id="sidebar"></aside>
+  <main id="main-panel">
+    <div class="output-header">
+      <div class="output-title">Prompt gerado</div>
+      <div class="btn-row">
+        <span class="copy-feedback" id="copy-feedback">Copiado!</span>
+        <button class="btn" onclick="copyPrompt()">Copiar</button>
+        <button class="btn btn-accent" onclick="generatePrompt()">Gerar</button>
       </div>
     </div>
-  </div>
-
-  <!-- CENÁRIO -->
-  <div class="section">
-    <div class="section-header">
-      <span class="section-num">04</span>
-      <span class="section-title">Cenário</span>
+    <div class="output-box" id="output">Preencha os campos ao lado e clique em <span style="color:var(--accent)">⚡ Gerar Prompt</span>.</div>
+    <div class="status-bar">
+      <div class="status-dot"></div>
+      <span id="word-count">Pronto para gerar</span>
+      <span style="margin-left:auto;font-size:10px;color:var(--muted2)" id="status-tag"></span>
     </div>
-    <div class="section-body">
-      <div class="field">
-        <label>Descrição do fundo</label>
-        <textarea id="background" placeholder="ex: uma grande tubulação de óleo pelo mar ártico congelado, com gelo ao redor..."></textarea>
-      </div>
-      <div class="field">
-        <label>Elemento principal da cena</label>
-        <input type="text" id="main-prop" placeholder="ex: pipeline de óleo, caminhão, avião..."/>
-      </div>
-      <div class="field">
-        <label>Detalhes extras (opcional)</label>
-        <textarea id="scene-detail" placeholder="ex: névoa, detritos voando, reflexo no chão molhado..."></textarea>
-      </div>
-    </div>
-  </div>
-
-  <!-- LUZ -->
-  <div class="section">
-    <div class="section-header">
-      <span class="section-num">05</span>
-      <span class="section-title">Iluminação</span>
-    </div>
-    <div class="section-body">
-      <div class="field-row">
-        <div class="field">
-          <label>Tipo de luz</label>
-          <select id="light-type">
-            <option value="golden hour natural sunlight, warm tones">Golden hour</option>
-            <option value="hard dramatic side lighting, deep shadows">Dramática lateral</option>
-            <option value="soft overcast daylight, diffused shadows">Difusa / nublado</option>
-            <option value="neon and artificial city lights at night">Neon / noturna</option>
-            <option value="high-key flat lighting, bright and even">High-key</option>
-            <option value="backlit silhouette with rim light">Contraluz</option>
-            <option value="moody low-key lighting, shadows dominant">Low-key</option>
-          </select>
-        </div>
-        <div class="field">
-          <label>Posição da luz</label>
-          <select id="light-pos">
-            <option value="upper-left">Superior esquerdo</option>
-            <option value="upper-right">Superior direito</option>
-            <option value="directly above (overhead)">Topo (overhead)</option>
-            <option value="lower-left (upward fill)">Inferior esquerdo</option>
-            <option value="lower-right (upward fill)">Inferior direito</option>
-            <option value="directly behind subject (backlit)">Atrás (backlit)</option>
-            <option value="directly in front (front-lit)">Frontal</option>
-          </select>
-        </div>
-      </div>
-      <div class="field-row">
-        <div class="field">
-          <label>Tom da key light</label>
-          <div class="tags" id="key-color">
-            <span class="tag active" data-val="warm orange-golden">Quente dourado</span>
-            <span class="tag" data-val="cool blue-white">Frio azulado</span>
-            <span class="tag" data-val="neutral white">Neutro</span>
-            <span class="tag" data-val="deep red-orange">Vermelho dramático</span>
-          </div>
-        </div>
-        <div class="field">
-          <label>Tom do rim light</label>
-          <div class="tags" id="rim-color">
-            <span class="tag active" data-val="cold blue">Frio azul</span>
-            <span class="tag" data-val="warm amber">Âmbar quente</span>
-            <span class="tag" data-val="neon green">Neon verde</span>
-            <span class="tag" data-val="purple">Roxo</span>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <button class="generate-btn" onclick="generatePrompt()">⚡ Gerar Prompt</button>
-
-</aside>
-
-<main>
-  <div class="output-header">
-    <div class="output-title">Prompt gerado</div>
-    <div class="btn-row">
-      <span class="copy-feedback" id="copy-feedback">Copiado!</span>
-      <button class="btn" onclick="copyPrompt()">Copiar</button>
-      <button class="btn btn-accent" onclick="generatePrompt()">Gerar</button>
-    </div>
-  </div>
-
-  <div class="output-box" id="output">Preencha os campos ao lado e clique em <span style="color:var(--accent)">⚡ Gerar Prompt</span> para gerar o prompt completo.</div>
-
-  <div class="status-bar">
-    <div class="status-dot"></div>
-    <span id="word-count">Pronto para gerar</span>
-    <span style="margin-left:auto;font-size:10px;color:var(--muted2)">Grid 2×2 · 16:9 · Rule of Thirds</span>
-  </div>
-</main>
+  </main>
+</div>
 
 <script>
-const charDefs = ['Youtuber (principal)', 'Secundário', 'Terciário'];
+// ── STATE ──
+let CONFIG = null;
+let currentPrompt = null;
+const charNames = ['Youtuber (principal)', 'Secundário', 'Terciário'];
 
-function updateChars() {
-  const n = parseInt(document.getElementById('num-chars').value);
-  document.getElementById('char-badge').textContent = n + (n===1?' pessoa':' pessoas');
-  const c = document.getElementById('char-container');
-  c.innerHTML = '';
-  for (let i = 0; i < n; i++) {
-    const div = document.createElement('div');
-    div.className = 'char-block';
-    div.innerHTML = `
-      <div class="char-block-header"><div class="char-dot"></div>${charDefs[i]}</div>
-      <div class="char-block-body">
-        <div class="field-row">
-          <div class="field"><label>Gênero</label>
-            <select id="gender-${i}"><option value="male">Masculino</option><option value="female">Feminino</option></select>
-          </div>
-          <div class="field"><label>Aparência</label>
-            <input type="text" id="eth-${i}" placeholder="ex: branco, latino..."/>
-          </div>
-        </div>
-        <div class="field"><label>Personagem / Referência</label>
-          <input type="text" id="character-${i}" placeholder="ex: The Deep de The Boys, Peter Parker..."/>
-        </div>
-        <div class="field-row">
-          <div class="field"><label>Roupa (top)</label>
-            <input type="text" id="top-${i}" placeholder="ex: terno preto, moletom..."/>
-          </div>
-          <div class="field"><label>Roupa (bottom)</label>
-            <input type="text" id="bot-${i}" placeholder="ex: calça jeans, short..."/>
-          </div>
-        </div>
-        ${i > 0 ? `<div class="field"><label>Posição relativa ao Youtuber</label>
-          <select id="rel-${i}">
-            <option value="standing beside the main subject on the right">Direita do Youtuber</option>
-            <option value="standing beside the main subject on the left">Esquerda do Youtuber</option>
-            <option value="slightly behind the main subject">Levemente atrás</option>
-            <option value="in the foreground, partially cut off by frame edge">Primeiro plano, parcialmente cortado</option>
-            <option value="facing the main subject in confrontation">De frente (confronto)</option>
-          </select>
-        </div>` : ''}
-      </div>`;
-    c.appendChild(div);
+// ── LOAD JSON ──
+async function loadConfig() {
+  try {
+    const r = await fetch('prompts.json');
+    CONFIG = await r.json();
+    renderHome();
+  } catch(e) {
+    document.getElementById('view-home').innerHTML = `<div style="padding:3rem;color:var(--muted);font-family:'DM Mono',monospace;font-size:13px;">Erro ao carregar prompts.json.<br/><br/>Certifique-se que o arquivo está na mesma pasta que o index.html.</div>`;
   }
 }
 
-function getActive(id) {
+// ── HOME ──
+function renderHome() {
+  const grid = document.getElementById('home-grid');
+  grid.innerHTML = '';
+  document.getElementById('breadcrumb').innerHTML = '';
+  CONFIG.prompts.forEach(p => {
+    const card = document.createElement('div');
+    card.className = 'prompt-card';
+    card.innerHTML = `
+      <div class="card-icon">${p.icon}</div>
+      <div class="card-tag">${p.tag}</div>
+      <div class="card-title">${p.title}</div>
+      <div class="card-desc">${p.description}</div>
+      <div class="card-arrow">Abrir gerador <span>→</span></div>
+    `;
+    card.onclick = () => openPrompt(p.id);
+    grid.appendChild(card);
+  });
+}
+
+function goHome() {
+  document.getElementById('view-home').style.display = 'flex';
+  document.getElementById('view-prompt').classList.remove('active');
+  document.getElementById('breadcrumb').innerHTML = '';
+  document.getElementById('hdr-tag').textContent = 'Prompt Studio';
+  currentPrompt = null;
+}
+
+// ── OPEN PROMPT ──
+function openPrompt(id) {
+  currentPrompt = CONFIG.prompts.find(p => p.id === id);
+  if (!currentPrompt) return;
+
+  document.getElementById('view-home').style.display = 'none';
+  document.getElementById('view-prompt').classList.add('active');
+  document.getElementById('hdr-tag').textContent = currentPrompt.tag;
+  document.getElementById('status-tag').textContent = currentPrompt.tag;
+  document.getElementById('breadcrumb').innerHTML = `
+    <span class="bc-home" onclick="goHome()">Home</span>
+    <span class="sep">›</span>
+    <span class="current">${currentPrompt.title}</span>
+  `;
+
+  renderSidebar(currentPrompt);
+  document.getElementById('output').textContent = 'Preencha os campos ao lado e clique em ⚡ Gerar Prompt.';
+  document.getElementById('word-count').textContent = 'Pronto para gerar';
+}
+
+// ── RENDER SIDEBAR ──
+function renderSidebar(prompt) {
+  const sidebar = document.getElementById('sidebar');
+  sidebar.innerHTML = '';
+
+  // group fields by section
+  const sections = [];
+  const sectionMap = {};
+  prompt.fields.forEach(f => {
+    const key = f.sectionNumber + f.section;
+    if (!sectionMap[key]) {
+      sectionMap[key] = { num: f.sectionNumber, title: f.section, fields: [] };
+      sections.push(sectionMap[key]);
+    }
+    sectionMap[key].fields.push(f);
+  });
+
+  sections.forEach(sec => {
+    const div = document.createElement('div');
+    div.className = 'section';
+
+    // group cols
+    const rows = groupIntoRows(sec.fields);
+    let bodyHTML = '';
+    rows.forEach(row => {
+      if (row.length === 2) {
+        bodyHTML += `<div class="field-row">${row.map(f => renderField(f)).join('')}</div>`;
+      } else {
+        bodyHTML += row.map(f => renderField(f)).join('');
+      }
+    });
+
+    // character spawner
+    const spawner = sec.fields.find(f => f.spawns === 'characters');
+    const charBadge = spawner ? `<span class="badge" id="char-badge">1 pessoa</span>` : '';
+
+    div.innerHTML = `
+      <div class="section-header">
+        <span class="section-num">${sec.num}</span>
+        <span class="section-title">${sec.title}</span>
+        ${charBadge}
+      </div>
+      <div class="section-body">${bodyHTML}${spawner ? '<div id="char-container"></div>' : ''}</div>
+    `;
+    sidebar.appendChild(div);
+
+    // init tag clicks
+    div.querySelectorAll('.tags').forEach(group => {
+      group.querySelectorAll('.tag').forEach((tag, i) => {
+        tag.addEventListener('click', () => {
+          group.querySelectorAll('.tag').forEach(t => t.classList.remove('active'));
+          tag.classList.add('active');
+        });
+      });
+    });
+
+    // init char spawner
+    if (spawner) {
+      const sel = div.querySelector(`#${spawner.id}`);
+      if (sel) { sel.addEventListener('change', () => updateChars(prompt)); updateChars(prompt); }
+    }
+  });
+
+  // generate button
+  const btn = document.createElement('button');
+  btn.className = 'generate-btn';
+  btn.textContent = '⚡ Gerar Prompt';
+  btn.onclick = generatePrompt;
+  sidebar.appendChild(btn);
+}
+
+function groupIntoRows(fields) {
+  const rows = [];
+  let i = 0;
+  while (i < fields.length) {
+    const f = fields[i];
+    const next = fields[i + 1];
+    if (f.col === 2 && next && next.col === 2 && f.section === next.section) {
+      rows.push([f, next]);
+      i += 2;
+    } else {
+      rows.push([f]);
+      i++;
+    }
+  }
+  return rows;
+}
+
+function renderField(f) {
+  if (f.type === 'tags') {
+    const tagsHTML = f.options.map((o, i) =>
+      `<span class="tag${i === (f.default||0) ? ' active' : ''}" data-val="${esc(o.value)}">${o.label}</span>`
+    ).join('');
+    return `<div class="field">
+      ${f.label ? `<label>${f.label}</label>` : ''}
+      <div class="tags" id="${f.id}">${tagsHTML}</div>
+    </div>`;
+  }
+  if (f.type === 'select') {
+    const opts = f.options.map((o, i) =>
+      `<option value="${esc(o.value)}"${i === (f.default||0) ? ' selected' : ''}>${o.label}</option>`
+    ).join('');
+    return `<div class="field"><label>${f.label}</label><select id="${f.id}">${opts}</select></div>`;
+  }
+  if (f.type === 'textarea') {
+    return `<div class="field"><label>${f.label}</label><textarea id="${f.id}" placeholder="${esc(f.placeholder||'')}"></textarea></div>`;
+  }
+  if (f.type === 'text') {
+    return `<div class="field"><label>${f.label}</label><input type="text" id="${f.id}" placeholder="${esc(f.placeholder||'')}"/></div>`;
+  }
+  return '';
+}
+
+function esc(s) { return String(s).replace(/"/g, '&quot;'); }
+
+// ── CHAR SPAWNER ──
+function updateChars(prompt) {
+  const sel = document.getElementById('num_chars');
+  if (!sel) return;
+  const n = parseInt(sel.value);
+  const badge = document.getElementById('char-badge');
+  if (badge) badge.textContent = n + (n === 1 ? ' pessoa' : ' pessoas');
+  const container = document.getElementById('char-container');
+  if (!container) return;
+  container.innerHTML = '';
+
+  const cf = prompt.characterFields || [];
+  const positions = prompt.secondaryPositions || [];
+
+  for (let i = 0; i < n; i++) {
+    const block = document.createElement('div');
+    block.className = 'char-block';
+    block.style.marginTop = '.5rem';
+
+    let fieldsHTML = '';
+    // pair up fields into rows of 2
+    for (let j = 0; j < cf.length; j += 2) {
+      const a = cf[j], b = cf[j + 1];
+      if (b) {
+        fieldsHTML += `<div class="field-row">${renderCharField(a, i)}${renderCharField(b, i)}</div>`;
+      } else {
+        fieldsHTML += renderCharField(a, i);
+      }
+    }
+
+    // secondary position
+    if (i > 0 && positions.length) {
+      const opts = positions.map(p => `<option value="${esc(p.value)}">${p.label}</option>`).join('');
+      fieldsHTML += `<div class="field"><label>Posição relativa ao Youtuber</label><select id="rel-${i}">${opts}</select></div>`;
+    }
+
+    block.innerHTML = `
+      <div class="char-block-header"><div class="char-dot"></div>${charNames[i]}</div>
+      <div class="char-block-body">${fieldsHTML}</div>
+    `;
+    container.appendChild(block);
+  }
+}
+
+function renderCharField(f, charIndex) {
+  if (f.type === 'select') {
+    const opts = f.options.map(o => `<option value="${esc(o.value)}">${o.label}</option>`).join('');
+    return `<div class="field"><label>${f.label}</label><select id="${f.id}-${charIndex}">${opts}</select></div>`;
+  }
+  return `<div class="field"><label>${f.label}</label><input type="text" id="${f.id}-${charIndex}" placeholder="${esc(f.placeholder||'')}"/></div>`;
+}
+
+// ── GET VALUE ──
+function val(id) {
+  const el = document.getElementById(id);
+  if (!el) return '';
+  return el.value || '';
+}
+
+function activeTag(id) {
   const el = document.querySelector(`#${id} .tag.active`);
   return el ? el.dataset.val : '';
 }
 
-document.querySelectorAll('.tags').forEach(group => {
-  group.addEventListener('click', e => {
-    const tag = e.target.closest('.tag');
-    if (!tag) return;
-    group.querySelectorAll('.tag').forEach(t => t.classList.remove('active'));
-    tag.classList.add('active');
-  });
-});
-
+// ── GENERATE ──
 function generatePrompt() {
-  const style = getActive('style-tags');
-  const art = getActive('art-tags');
-  const n = parseInt(document.getElementById('num-chars').value);
-  const angle = document.getElementById('cam-angle').value;
-  const framing = document.getElementById('framing').value;
-  const pose = document.getElementById('pose').value;
-  const expr = document.getElementById('expression').value;
-  const bg = document.getElementById('background').value || 'dynamic environment fitting the scene';
-  const prop = document.getElementById('main-prop').value || 'main environmental element';
-  const sceneDetail = document.getElementById('scene-detail').value;
-  const lightType = document.getElementById('light-type').value;
-  const lightPos = document.getElementById('light-pos').value;
-  const keyColor = getActive('key-color');
-  const rimColor = getActive('rim-color');
+  if (!currentPrompt) return;
+  const p = currentPrompt;
+  let tpl = p.template;
 
-  const peopleWord = n === 1 ? 'one person' : n === 2 ? 'two people' : 'three people';
+  // replace simple field tokens
+  p.fields.forEach(f => {
+    let v = '';
+    if (f.type === 'tags') v = activeTag(f.id);
+    else v = val(f.id);
+    tpl = tpl.split(`{{${f.id}}}`).join(v || f.placeholder || '');
+  });
 
-  let chars = [];
+  // special tokens per prompt
+  if (p.id === 'concept-generator') tpl = buildConcept(tpl, p);
+  if (p.id === 'relight') tpl = buildRelight(tpl);
+
+  document.getElementById('output').textContent = tpl;
+  const wc = tpl.split(/\s+/).length;
+  document.getElementById('word-count').textContent = `${wc} palavras · ${tpl.length} caracteres`;
+}
+
+function buildConcept(tpl, p) {
+  const numSel = document.getElementById('num_chars');
+  const n = numSel ? parseInt(numSel.value) : 1;
+  const words = ['one', 'two', 'three'];
+  tpl = tpl.split('{{num_chars_word}}').join(words[n - 1] || 'one');
+
+  // characters block
+  const cf = p.characterFields || [];
+  const positions = p.secondaryPositions || [];
+  let charLines = [];
   for (let i = 0; i < n; i++) {
-    const gender = document.getElementById(`gender-${i}`)?.value || 'male';
-    const eth = document.getElementById(`eth-${i}`)?.value;
-    const character = document.getElementById(`character-${i}`)?.value;
-    const top = document.getElementById(`top-${i}`)?.value;
-    const bot = document.getElementById(`bot-${i}`)?.value;
-    const rel = document.getElementById(`rel-${i}`)?.value;
+    const gender = val(`gender-${i}`) || 'male';
+    const eth = val(`eth-${i}`);
+    const character = val(`character-${i}`);
+    const top = val(`top-${i}`);
+    const bot = val(`bot-${i}`);
+    const rel = val(`rel-${i}`);
+    const pose = val('pose');
+    const expr = activeTag ? activeTag('expression') : val('expression');
 
     let line = `${i + 1}. ${i === 0 ? 'Main subject (Youtuber)' : 'Subject ' + (i + 1)}`;
     if (eth) line += `, ${eth}`;
@@ -627,38 +555,35 @@ function generatePrompt() {
     if (bot) line += `, ${bot}`;
     if (i === 0) line += `. ${pose}. ${expr}`;
     else if (rel) line += `. ${rel}`;
-    chars.push(line);
+    charLines.push(line);
   }
+  tpl = tpl.split('{{characters}}').join(charLines.join('\n'));
 
-  const prompt =
-`Make 4 different and creative angle variations in the best composition from this scene, still showing the main subject human. Human needs to look at the camera. Create all 4 in the same ${art}, arranged in a 2x2 grid in a single image.
+  // scene detail block
+  const sd = val('scene_detail');
+  tpl = tpl.split('{{scene_detail_block}}').join(sd ? ' ' + sd + '.' : '');
 
-YouTube thumbnail concept, ${peopleWord}, ${style}.
-
-CHARACTERS:
-${chars.join('\n')}
-
-EYE CONTACT RULE: The Youtuber's eyes are ALWAYS directed straight into the camera lens in every single panel, regardless of head angle or body direction. This rule is absolute and cannot be broken.
-
-RULE OF THIRDS (critical, applied to every cell): Mentally divide each frame into a 3x3 grid of 9 equal sections using 2 vertical and 2 horizontal lines. All key compositional elements must be deliberately placed on or near these lines and their 4 intersection points (power points). The character's eyes must land on or within the top horizontal third line. The character's body must be anchored to either the left or right vertical third, never dead center. The primary environmental element must occupy the opposite vertical third from the character. The horizon line must align with either the top or bottom horizontal third, never the middle. No important element should be placed in the exact center of the frame.
-
-SETTING: ${bg}.${sceneDetail ? ' ' + sceneDetail + '.' : ''}
-
-GLOBAL LIGHT SOURCE: ${lightType} coming from the ${lightPos} of each frame — ${keyColor} tones hitting the character's face and suit as the key light, creating strong specularity on the suit material. The opposite side of the character falls into cool shadow, creating contrast that reinforces the environment. A subtle ${rimColor} rim light from the rear separates the character from the background. This light setup is consistent across all 4 cells, adapted to the geometry of each angle.
-
-SPACE DIVISION RULE (critical): The main subject and the key environmental elements (${prop}) must always share the frame as equals. The character should never fully cover, overlap, or obstruct the primary scene elements. Both the character AND the environment must be clearly readable at the same time — treat them as two co-protagonists of the composition. The character is placed to the side, in front of, or angled away from the main prop so that both are fully visible. The only acceptable exception is when the pose physically requires partial overlap (such as pointing at or interacting with the object directly).
-
-CAMERA & COMPOSITION: ${framing}, ${angle}. Each of the 4 variations must use a distinctly different camera angle, framing and body pose while respecting all rules above.
-
-COMPOSITION RULES (applied to all 4 cells): No dead space — every inch filled with subject or contextual environment. No text, no speech bubbles, no graphic overlays. No letterboxing, no empty corners. Each cell is a complete standalone 16:9 thumbnail composition.
-
-TECHNICAL: Single image with 2x2 grid layout, no borders or separators between cells, each cell 16:9 ratio.`;
-
-  document.getElementById('output').textContent = prompt;
-  const wc = prompt.split(/\s+/).length;
-  document.getElementById('word-count').textContent = `${wc} palavras · ${prompt.length} caracteres`;
+  return tpl;
 }
 
+function buildRelight(tpl) {
+  const scope = activeTag('scope');
+  let scopeBlock = '';
+  if (scope === 'subject_only') {
+    scopeBlock = `SUBJECT-ONLY MODE:\n- Relight only the subject — hair, skin, clothing, accessories\n- Ground shadow beneath subject must be consistent with light direction if present\n- Do not alter the background in any way`;
+  } else {
+    scopeBlock = `FULL SCENE MODE:\n- Relight subject AND environment together with the same light source\n- Environmental shadows, surface reflections, and atmospheric light must be consistent with the light hitting the subject\n- Background elements further from the light source receive proportionally less illumination`;
+  }
+  tpl = tpl.split('{{scope_block}}').join(scopeBlock);
+
+  const rim = activeTag('rim_color');
+  const rimBlock = rim === 'none' ? '' : ` separating subject from background`;
+  tpl = tpl.split('{{rim_block}}').join(rimBlock);
+
+  return tpl;
+}
+
+// ── COPY ──
 function copyPrompt() {
   const text = document.getElementById('output').textContent;
   if (text.includes('Preencha')) return;
@@ -669,8 +594,8 @@ function copyPrompt() {
   });
 }
 
-updateChars();
-generatePrompt();
+// ── INIT ──
+loadConfig();
 </script>
 </body>
 </html>
