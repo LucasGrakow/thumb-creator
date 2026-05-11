@@ -228,9 +228,21 @@
       "tag": "Pós-processo · IC-Light",
       "fields": [
         {
-          "id": "light_direction",
-          "section": "Direção da Luz",
+          "id": "relight_mode",
+          "section": "Modo de Relight",
           "sectionNumber": "01",
+          "type": "tags",
+          "label": null,
+          "options": [
+            { "label": "Adicionar luz",       "value": "additive" },
+            { "label": "Reconstruir luz",     "value": "reconstruct" }
+          ],
+          "default": 0
+        },
+        {
+          "id": "light_direction",
+          "section": "Nova Luz",
+          "sectionNumber": "02",
           "type": "tags",
           "label": null,
           "options": [
@@ -247,7 +259,7 @@
         },
         {
           "id": "light_type",
-          "section": "Tipo de Fonte",
+          "section": "Nova Luz",
           "sectionNumber": "02",
           "type": "tags",
           "label": null,
@@ -263,8 +275,8 @@
         },
         {
           "id": "intensity",
-          "section": "Intensidade",
-          "sectionNumber": "03",
+          "section": "Nova Luz",
+          "sectionNumber": "02",
           "type": "tags",
           "label": null,
           "options": [
@@ -278,7 +290,7 @@
         {
           "id": "key_color",
           "section": "Temperatura da Luz",
-          "sectionNumber": "04",
+          "sectionNumber": "03",
           "type": "tags",
           "label": "Tom da key light",
           "options": [
@@ -294,7 +306,7 @@
         {
           "id": "rim_color",
           "section": "Temperatura da Luz",
-          "sectionNumber": "04",
+          "sectionNumber": "03",
           "type": "tags",
           "label": "Rim light",
           "options": [
@@ -309,7 +321,7 @@
         {
           "id": "scope",
           "section": "Escopo",
-          "sectionNumber": "05",
+          "sectionNumber": "04",
           "type": "tags",
           "label": "O relight afeta",
           "options": [
@@ -319,7 +331,7 @@
           "default": 0
         }
       ],
-      "template": "Relight this image using IC-Light logic. Do not alter the composition, facial features, outfit, or any structural element of the image. Only modify the lighting.\n\nLIGHT SOURCE:\n- Direction: {{light_direction}}\n- Type: {{light_type}}\n- Intensity: {{intensity}}\n\nKEY LIGHT BEHAVIOR:\n- The key light enters from {{light_direction}}, casting visible shadows consistently opposite to the source\n- Shadow edge quality matches the source type: hard sources produce sharp edges, soft sources produce diffused gradual transitions\n- Specularity appears on all surfaces facing the light source — skin highlights, fabric sheen, reflective materials respond accordingly\n\nSHADOW BEHAVIOR:\n- Cast shadows fall consistently in the direction opposite to the light source\n- Shadow density matches light intensity\n- Maintain ambient occlusion in creases, under chin, under arms, between folds\n- Do not leave shadow areas as pure black — fill with a subtle complementary tone\n\n{{scope_block}}\n\nCOLOR & TEMPERATURE:\n- Key light color: {{key_color}}\n- Fill/shadow color: soft neutral or complementary cool tone in shadow areas, no pure black\n- Rim light: {{rim_color}}{{rim_block}}\n\nPRESERVATION RULES:\n- Do not change facial structure, expressions, or eye direction\n- Do not change outfit colors beyond what the new lighting naturally tints them\n- Do not add or remove any object from the scene\n- Do not alter the composition or crop\n- Maintain the original image's art style and render quality"
+      "template": "Relight this image using IC-Light logic. Do not alter the composition, facial features, outfit, or any structural element of the image. Only modify the lighting.\n\n{{relight_mode_block}}\n\nLIGHT SOURCE:\n- Direction: {{light_direction}}\n- Type: {{light_type}}\n- Intensity: {{intensity}}\n\nKEY LIGHT BEHAVIOR:\n- The key light enters from {{light_direction}}, casting visible shadows consistently opposite to the source\n- Shadow edge quality matches the source type: hard sources produce sharp edges, soft sources produce diffused gradual transitions\n- Specularity appears on all surfaces facing the light source — skin highlights, fabric sheen, reflective materials respond accordingly\n\nSHADOW BEHAVIOR:\n- Cast shadows fall consistently in the direction opposite to the light source\n- Shadow density matches light intensity\n- Maintain ambient occlusion in creases, under chin, under arms, between folds\n- Do not leave shadow areas as pure black — fill with a subtle complementary tone\n\n{{scope_block}}\n\nCOLOR & TEMPERATURE:\n- Key light color: {{key_color}}\n- Fill/shadow color: soft neutral or complementary cool tone in shadow areas, no pure black\n- Rim light: {{rim_color}}{{rim_block}}\n\nPRESERVATION RULES:\n- Do not change facial structure, expressions, or eye direction\n- Do not change outfit colors beyond what the new lighting naturally tints them\n- Do not add or remove any object from the scene\n- Do not alter the composition or crop\n- Maintain the original image's art style and render quality"
     }
   ]
 }
