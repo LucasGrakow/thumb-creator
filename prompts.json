@@ -1,0 +1,325 @@
+{
+  "prompts": [
+    {
+      "id": "concept-generator",
+      "title": "Concept Generator",
+      "description": "Gera 4 variações de thumbnail IRL em grid 2x2 com regras de composição, luz e personagens.",
+      "icon": "🎬",
+      "tag": "IRL · 2×2 Grid",
+      "fields": [
+        {
+          "id": "style",
+          "section": "Estilo Visual",
+          "sectionNumber": "01",
+          "type": "tags",
+          "label": null,
+          "options": [
+            { "label": "Ultra realista", "value": "ultra-realistic, shot on Sony A7IV, 24mm lens, cinematic depth of field" },
+            { "label": "Realista",        "value": "realistic, DSLR quality, natural lighting, editorial feel" },
+            { "label": "Over edited",     "value": "over-edited, heavy color grading, high contrast, dramatic saturation, composited background" }
+          ],
+          "default": 0
+        },
+        {
+          "id": "art",
+          "section": "Estilo Visual",
+          "sectionNumber": "01",
+          "type": "tags",
+          "label": "Pintura / Digital Art",
+          "options": [
+            { "label": "Stylized Realism", "value": "high-end cinematic digital painting in stylized realism" },
+            { "label": "Photo CGI",        "value": "high-end photorealistic CGI render" },
+            { "label": "Concept Art",      "value": "cinematic concept art, painterly finish" }
+          ],
+          "default": 0
+        },
+        {
+          "id": "num_chars",
+          "section": "Personagens",
+          "sectionNumber": "02",
+          "type": "select",
+          "label": "Nº de pessoas",
+          "options": [
+            { "label": "1 — só o Youtuber",          "value": "1" },
+            { "label": "2 — Youtuber + secundário",   "value": "2" },
+            { "label": "3 — Youtuber + 2 outros",     "value": "3" }
+          ],
+          "default": 0,
+          "spawns": "characters"
+        },
+        {
+          "id": "cam_angle",
+          "section": "Câmera e Composição",
+          "sectionNumber": "03",
+          "type": "select",
+          "label": "Ângulo",
+          "options": [
+            { "label": "Variado (4 diferentes)",  "value": "4 distinctly different camera angles across the 4 cells" },
+            { "label": "Low angle",               "value": "low-angle shot looking up" },
+            { "label": "Eye level",               "value": "eye-level shot" },
+            { "label": "High angle",              "value": "high-angle shot looking down" },
+            { "label": "Dutch angle",             "value": "Dutch angle, slightly tilted" },
+            { "label": "Extreme close-up",        "value": "extreme close-up" },
+            { "label": "Over the shoulder",       "value": "over-the-shoulder" }
+          ],
+          "default": 0,
+          "col": 2
+        },
+        {
+          "id": "framing",
+          "section": "Câmera e Composição",
+          "sectionNumber": "03",
+          "type": "select",
+          "label": "Enquadramento",
+          "options": [
+            { "label": "Ambiental (40%)",   "value": "environmental portrait with subject taking up 40% of frame" },
+            { "label": "Meio corpo",        "value": "medium shot, from waist up" },
+            { "label": "Close (peito)",     "value": "close-up shot, from chest up" },
+            { "label": "Corpo inteiro",     "value": "full body shot" }
+          ],
+          "default": 0,
+          "col": 2
+        },
+        {
+          "id": "pose",
+          "section": "Câmera e Composição",
+          "sectionNumber": "03",
+          "type": "select",
+          "label": "Pose",
+          "options": [
+            { "label": "Braços cruzados",        "value": "arms crossed, confident stance" },
+            { "label": "Inclinado à frente",     "value": "standing, arms slightly open, leaning forward" },
+            { "label": "Agachado tenso",         "value": "crouching low to the ground, intense" },
+            { "label": "Correndo",               "value": "running or mid-action toward camera" },
+            { "label": "Apontando",              "value": "pointing at something off-frame" },
+            { "label": "Mão levantada",          "value": "one hand raised dramatically" },
+            { "label": "Reação exagerada",       "value": "reacting with exaggerated expression, hands near face" }
+          ],
+          "default": 0,
+          "col": 2
+        },
+        {
+          "id": "expression",
+          "section": "Câmera e Composição",
+          "sectionNumber": "03",
+          "type": "select",
+          "label": "Expressão",
+          "options": [
+            { "label": "Sério, olhar fixo",   "value": "intense direct eye contact with camera, serious expression" },
+            { "label": "Chocado",             "value": "wide shocked expression, eyes open, mouth agape" },
+            { "label": "Sorriso confiante",   "value": "confident smirk, eyes locked on camera" },
+            { "label": "Irritado",            "value": "angry or frustrated, eyebrows furrowed" },
+            { "label": "Rindo",               "value": "laughing naturally, eyes toward camera" },
+            { "label": "Determinado",         "value": "determined look, jaw set" }
+          ],
+          "default": 0,
+          "col": 2
+        },
+        {
+          "id": "background",
+          "section": "Cenário",
+          "sectionNumber": "04",
+          "type": "textarea",
+          "label": "Descrição do fundo",
+          "placeholder": "ex: uma grande tubulação de óleo pelo mar ártico congelado, com gelo ao redor..."
+        },
+        {
+          "id": "main_prop",
+          "section": "Cenário",
+          "sectionNumber": "04",
+          "type": "text",
+          "label": "Elemento principal da cena",
+          "placeholder": "ex: pipeline de óleo, caminhão, avião..."
+        },
+        {
+          "id": "scene_detail",
+          "section": "Cenário",
+          "sectionNumber": "04",
+          "type": "textarea",
+          "label": "Detalhes extras (opcional)",
+          "placeholder": "ex: névoa, detritos voando, reflexo no chão molhado..."
+        },
+        {
+          "id": "light_type",
+          "section": "Iluminação",
+          "sectionNumber": "05",
+          "type": "select",
+          "label": "Tipo de luz",
+          "options": [
+            { "label": "Golden hour",        "value": "golden hour natural sunlight, warm tones" },
+            { "label": "Dramática lateral",  "value": "hard dramatic side lighting, deep shadows" },
+            { "label": "Difusa / nublado",   "value": "soft overcast daylight, diffused shadows" },
+            { "label": "Neon / noturna",     "value": "neon and artificial city lights at night" },
+            { "label": "High-key",           "value": "high-key flat lighting, bright and even" },
+            { "label": "Contraluz",          "value": "backlit silhouette with rim light" },
+            { "label": "Low-key",            "value": "moody low-key lighting, shadows dominant" }
+          ],
+          "default": 0,
+          "col": 2
+        },
+        {
+          "id": "light_pos",
+          "section": "Iluminação",
+          "sectionNumber": "05",
+          "type": "select",
+          "label": "Posição da luz",
+          "options": [
+            { "label": "Superior esquerdo",   "value": "upper-left" },
+            { "label": "Superior direito",    "value": "upper-right" },
+            { "label": "Topo (overhead)",     "value": "directly above (overhead)" },
+            { "label": "Inferior esquerdo",   "value": "lower-left (upward fill)" },
+            { "label": "Inferior direito",    "value": "lower-right (upward fill)" },
+            { "label": "Atrás (backlit)",     "value": "directly behind subject (backlit)" },
+            { "label": "Frontal",             "value": "directly in front (front-lit)" }
+          ],
+          "default": 0,
+          "col": 2
+        },
+        {
+          "id": "key_color",
+          "section": "Iluminação",
+          "sectionNumber": "05",
+          "type": "tags",
+          "label": "Tom da key light",
+          "options": [
+            { "label": "Quente dourado",      "value": "warm orange-golden" },
+            { "label": "Frio azulado",        "value": "cool blue-white" },
+            { "label": "Neutro",              "value": "neutral white" },
+            { "label": "Vermelho dramático",  "value": "deep red-orange" }
+          ],
+          "default": 0
+        },
+        {
+          "id": "rim_color",
+          "section": "Iluminação",
+          "sectionNumber": "05",
+          "type": "tags",
+          "label": "Tom do rim light",
+          "options": [
+            { "label": "Frio azul",   "value": "cold blue" },
+            { "label": "Âmbar",       "value": "warm amber" },
+            { "label": "Neon verde",  "value": "neon green" },
+            { "label": "Roxo",        "value": "purple" }
+          ],
+          "default": 0
+        }
+      ],
+      "characterFields": [
+        { "id": "gender",    "type": "select", "label": "Gênero",              "options": [{"label":"Masculino","value":"male"},{"label":"Feminino","value":"female"}] },
+        { "id": "eth",       "type": "text",   "label": "Aparência",           "placeholder": "ex: branco, latino..." },
+        { "id": "character", "type": "text",   "label": "Personagem / Ref.",   "placeholder": "ex: The Deep de The Boys..." },
+        { "id": "top",       "type": "text",   "label": "Roupa (top)",         "placeholder": "ex: terno preto..." },
+        { "id": "bot",       "type": "text",   "label": "Roupa (bottom)",      "placeholder": "ex: calça jeans..." }
+      ],
+      "secondaryPositions": [
+        { "label": "Direita do Youtuber",              "value": "standing beside the main subject on the right" },
+        { "label": "Esquerda do Youtuber",             "value": "standing beside the main subject on the left" },
+        { "label": "Levemente atrás",                  "value": "slightly behind the main subject" },
+        { "label": "Primeiro plano, parcialmente cortado", "value": "in the foreground, partially cut off by frame edge" },
+        { "label": "De frente (confronto)",            "value": "facing the main subject in confrontation" }
+      ],
+      "template": "Make 4 different and creative angle variations in the best composition from this scene, still showing the main subject human. Human needs to look at the camera. Create all 4 in the same {{art}}, arranged in a 2x2 grid in a single image.\n\nYouTube thumbnail concept, {{num_chars_word}} person, {{style}}.\n\nCHARACTERS:\n{{characters}}\n\nEYE CONTACT RULE: The Youtuber's eyes are ALWAYS directed straight into the camera lens in every single panel, regardless of head angle or body direction. This rule is absolute and cannot be broken.\n\nRULE OF THIRDS (critical, applied to every cell): Mentally divide each frame into a 3x3 grid of 9 equal sections using 2 vertical and 2 horizontal lines. All key compositional elements must be deliberately placed on or near these lines and their 4 intersection points (power points). The character's eyes must land on or within the top horizontal third line. The character's body must be anchored to either the left or right vertical third, never dead center. The primary environmental element must occupy the opposite vertical third from the character. The horizon line must align with either the top or bottom horizontal third, never the middle. No important element should be placed in the exact center of the frame.\n\nSETTING: {{background}}.{{scene_detail_block}}\n\nGLOBAL LIGHT SOURCE: {{light_type}} coming from the {{light_pos}} of each frame — {{key_color}} tones hitting the character's face and suit as the key light, creating strong specularity on the suit material. The opposite side of the character falls into cool shadow, creating contrast that reinforces the environment. A subtle {{rim_color}} rim light from the rear separates the character from the background. This light setup is consistent across all 4 cells, adapted to the geometry of each angle.\n\nSPACE DIVISION RULE (critical): The main subject and the key environmental elements ({{main_prop}}) must always share the frame as equals. The character should never fully cover, overlap, or obstruct the primary scene elements. Both the character AND the environment must be clearly readable at the same time — treat them as two co-protagonists of the composition. The character is placed to the side, in front of, or angled away from the main prop so that both are fully visible. The only acceptable exception is when the pose physically requires partial overlap (such as pointing at or interacting with the object directly).\n\nCAMERA & COMPOSITION: {{framing}}, {{cam_angle}}. Each of the 4 variations must use a distinctly different camera angle, framing and body pose while respecting all rules above.\n\nCOMPOSITION RULES (applied to all 4 cells): No dead space — every inch filled with subject or contextual environment. No text, no speech bubbles, no graphic overlays. No letterboxing, no empty corners. Each cell is a complete standalone 16:9 thumbnail composition.\n\nTECHNICAL: Single image with 2x2 grid layout, no borders or separators between cells, each cell 16:9 ratio."
+    },
+    {
+      "id": "relight",
+      "title": "Relight",
+      "description": "Aplica nova iluminação em imagem existente usando lógica IC-Light. Controle direção, tipo e intensidade da luz.",
+      "icon": "💡",
+      "tag": "Pós-processo · IC-Light",
+      "fields": [
+        {
+          "id": "light_direction",
+          "section": "Direção da Luz",
+          "sectionNumber": "01",
+          "type": "tags",
+          "label": null,
+          "options": [
+            { "label": "Esquerda → Direita",   "value": "left side, traveling left to right across the scene" },
+            { "label": "Direita → Esquerda",   "value": "right side, traveling right to left across the scene" },
+            { "label": "Superior esquerdo",    "value": "upper-left, diagonal downward across the scene" },
+            { "label": "Superior direito",     "value": "upper-right, diagonal downward across the scene" },
+            { "label": "Topo (overhead)",      "value": "directly above, traveling straight down" },
+            { "label": "Inferior esquerdo",    "value": "lower-left, traveling upward across the scene" },
+            { "label": "Frontal",              "value": "directly in front of the subject, flat front-lit" },
+            { "label": "Atrás (backlit)",      "value": "directly behind the subject, backlit silhouette" }
+          ],
+          "default": 0
+        },
+        {
+          "id": "light_type",
+          "section": "Tipo de Fonte",
+          "sectionNumber": "02",
+          "type": "tags",
+          "label": null,
+          "options": [
+            { "label": "Luz solar dura",      "value": "hard sunlight, sharp shadow edges, high contrast" },
+            { "label": "Estúdio suave",       "value": "soft studio light, diffused and even, gentle shadow edges" },
+            { "label": "Overcast difuso",     "value": "overcast diffused daylight, no hard shadows, even fill" },
+            { "label": "Neon",                "value": "neon artificial light, colored glow, soft falloff" },
+            { "label": "Vela / fogo",         "value": "candlelight or fire, warm flickering, very soft falloff" },
+            { "label": "Golden hour",         "value": "golden hour sunlight, warm raking light, long soft shadows" }
+          ],
+          "default": 1
+        },
+        {
+          "id": "intensity",
+          "section": "Intensidade",
+          "sectionNumber": "03",
+          "type": "tags",
+          "label": null,
+          "options": [
+            { "label": "Sutil",        "value": "subtle fill — barely noticeable, very low intensity" },
+            { "label": "Médio",        "value": "medium fill — present and visible but not overpowering, no blown-out highlights" },
+            { "label": "Forte",        "value": "strong dramatic — high intensity, deep shadows, bold highlights" },
+            { "label": "High-key",     "value": "blown-out high-key — maximum brightness, minimal shadows" }
+          ],
+          "default": 1
+        },
+        {
+          "id": "key_color",
+          "section": "Temperatura da Luz",
+          "sectionNumber": "04",
+          "type": "tags",
+          "label": "Tom da key light",
+          "options": [
+            { "label": "Branco neutro",       "value": "neutral white, slightly cool — clean and cinematic, not warm" },
+            { "label": "Quente dourado",      "value": "warm orange-gold, sunset tone" },
+            { "label": "Frio azulado",        "value": "cool blue-white, moonlight or overcast tone" },
+            { "label": "Vermelho dramático",  "value": "deep red-orange, dramatic and intense" },
+            { "label": "Neon verde",          "value": "neon green, sci-fi tone" },
+            { "label": "Roxo",                "value": "purple, moody cinematic tone" }
+          ],
+          "default": 0
+        },
+        {
+          "id": "rim_color",
+          "section": "Temperatura da Luz",
+          "sectionNumber": "04",
+          "type": "tags",
+          "label": "Rim light",
+          "options": [
+            { "label": "Nenhum",       "value": "none" },
+            { "label": "Frio azul",    "value": "cold blue" },
+            { "label": "Âmbar",        "value": "warm amber" },
+            { "label": "Neon verde",   "value": "neon green" },
+            { "label": "Roxo",         "value": "purple" }
+          ],
+          "default": 0
+        },
+        {
+          "id": "scope",
+          "section": "Escopo",
+          "sectionNumber": "05",
+          "type": "tags",
+          "label": "O relight afeta",
+          "options": [
+            { "label": "Personagem + cenário", "value": "full_scene" },
+            { "label": "Só o personagem",      "value": "subject_only" }
+          ],
+          "default": 0
+        }
+      ],
+      "template": "Relight this image using IC-Light logic. Do not alter the composition, facial features, outfit, or any structural element of the image. Only modify the lighting.\n\nLIGHT SOURCE:\n- Direction: {{light_direction}}\n- Type: {{light_type}}\n- Intensity: {{intensity}}\n\nKEY LIGHT BEHAVIOR:\n- The key light enters from {{light_direction}}, casting visible shadows consistently opposite to the source\n- Shadow edge quality matches the source type: hard sources produce sharp edges, soft sources produce diffused gradual transitions\n- Specularity appears on all surfaces facing the light source — skin highlights, fabric sheen, reflective materials respond accordingly\n\nSHADOW BEHAVIOR:\n- Cast shadows fall consistently in the direction opposite to the light source\n- Shadow density matches light intensity\n- Maintain ambient occlusion in creases, under chin, under arms, between folds\n- Do not leave shadow areas as pure black — fill with a subtle complementary tone\n\n{{scope_block}}\n\nCOLOR & TEMPERATURE:\n- Key light color: {{key_color}}\n- Fill/shadow color: soft neutral or complementary cool tone in shadow areas, no pure black\n- Rim light: {{rim_color}}{{rim_block}}\n\nPRESERVATION RULES:\n- Do not change facial structure, expressions, or eye direction\n- Do not change outfit colors beyond what the new lighting naturally tints them\n- Do not add or remove any object from the scene\n- Do not alter the composition or crop\n- Maintain the original image's art style and render quality"
+    }
+  ]
+}
