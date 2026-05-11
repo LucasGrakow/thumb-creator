@@ -214,7 +214,7 @@ textarea { resize: vertical; min-height: 58px; line-height: 1.6; }
 <!-- HOME -->
 <div id="view-home">
   <div class="home-hero">
-    <h1>Prompt<br/><em>Studio</em></h1>
+    <h1>Prompt<br/><em>List</em></h1>
     <p>Selecione um gerador de prompts abaixo. Cada um tem seus próprios campos e gera um prompt otimizado para a ferramenta certa.</p>
   </div>
   <div class="home-grid" id="home-grid"></div>
@@ -282,7 +282,7 @@ function goHome() {
   document.getElementById('view-home').style.display = 'flex';
   document.getElementById('view-prompt').classList.remove('active');
   document.getElementById('breadcrumb').innerHTML = '';
-  document.getElementById('hdr-tag').textContent = 'Prompt Studio';
+  document.getElementById('hdr-tag').textContent = 'Prompt List';
   currentPrompt = null;
 }
 
